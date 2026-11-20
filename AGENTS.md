@@ -28,3 +28,5 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+Case-taking structure: keep case types, demo records, and required-profile validation in `src/lib/case-taking.ts`, with the multi-step intake in a focused component, so the dashboard stays backend-free until persistence is requested.
