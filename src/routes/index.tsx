@@ -57,7 +57,10 @@ export const Route = createFileRoute("/")({
 
 type DashboardSection = "overview" | "cases" | "follow-ups" | "notes";
 type CaseFilter = "all" | "open" | "due" | "reviewed";
-type IconComponent = ComponentType<{ className?: string; "aria-hidden"?: boolean }>;
+type IconComponent = ComponentType<{
+  className?: string;
+  "aria-hidden"?: boolean | "true" | "false";
+}>;
 
 const navigation: { id: DashboardSection; label: string; icon: IconComponent }[] = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
@@ -403,7 +406,7 @@ function NavigationButton({
   item: { id: DashboardSection; label: string; icon: IconComponent };
   active: boolean;
   onClick: () => void;
-  count?: string;
+  count?: string | undefined;
   compact?: boolean;
 }) {
   const Icon = item.icon;
