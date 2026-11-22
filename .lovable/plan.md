@@ -1,13 +1,13 @@
-# Case-taking dashboard
+# Finish Case Desk dashboard
 
 ## What to build
-- Replace the template home screen with a working case-taking dashboard, using “Case Desk” as the temporary name while the requested name is pending.
-- Match the supplied Redline reference: warm ruled-paper canvas, dark ink typography, white work surfaces, and coral action buttons.
-- Show an overview with case counts, follow-ups, recent patient cases, search, and a new-case action.
-- Build an intake flow from the five PDF sections: patient profile, free narrative, P/Q/R/S/K symptom coding, clinical sections, and summary/prescription/follow-up.
-- Provide a usable sample record and responsive navigation; keep all records in page memory only, with no Lovable Cloud or database connection.
+- Make Bangla the default throughout the dashboard and case-intake form, with a clear English language switch.
+- Add a case summary and prescription dialog that can be printed cleanly.
+- Add archive and delete actions for patient cases, with confirmation before deleting and a way to view archived cases.
+- Keep sample and newly entered records in page memory only; do not connect a database.
 
 ## Technical details
-- Keep the experience on `/` and use existing UI controls and semantic design tokens.
-- Add lightweight form validation for the PDF’s required patient profile fields and keep the rule covered by a focused test.
-- Verify the dashboard and new-case flow in the running preview, then check the build log and commit the changes.
+- Preserve the existing warm ruled-paper, charcoal, and coral visual direction and current single-page workflow.
+- Translate visible dashboard and intake labels while leaving clinical record values and internal statuses unchanged.
+- Use the existing UI controls, semantic design tokens, and the browser print dialog; keep archived cases separate from active counts and follow-ups.
+- Verify Bangla default, English switching, printing view, archive/restore, and delete confirmation in the preview; run focused tests and inspect build diagnostics before committing.
