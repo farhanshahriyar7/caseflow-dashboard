@@ -34,6 +34,10 @@ import {
 } from "@/components/ui/table";
 import { CaseIntakeDialog } from "@/components/case-intake-dialog";
 import { demoCases, type CaseRecord } from "@/lib/case-taking";
+import {
+  CaseDeskLanguageProvider,
+  useCaseDeskLanguage,
+} from "@/lib/case-desk-language";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -99,10 +103,14 @@ function localToday(): string {
   return `${today.getFullYear()}-${month}-${day}`;
 }
 
-function formatDate(value: string, options: Intl.DateTimeFormatOptions = { month: "short", day: "numeric" }) {
-  if (!value) return "Not scheduled";
+function formatDate(
+  value: string,
+  language: "bn" | "en",
+  options: Intl.DateTimeFormatOptions = { month: "short", day: "numeric" },
+) {
+  if (!value) return language === "bn" ? "নির্ধারিত নয়" : "Not scheduled";
   const date = new Date(`${value}T12:00:00`);
-  return new Intl.DateTimeFormat("en", options).format(date);
+  return new Intl.DateTimeFormat(language === "bn" ? "bn-BD" : "en-US", options).format(date);
 }
 
 function getStatusClass(status: CaseRecord["status"]): string {
@@ -122,6 +130,15 @@ function getInitials(name: string): string {
 }
 
 function Index() {
+  return (
+    <CaseDeskLanguageProvider>
+      <CaseDeskDashboard />
+    </CaseDeskLanguageProvider>
+  );
+}
+
+function CaseDeskDashboard() {
+  const { language, setLanguage, t } = useCaseDeskLanguage();
   const [records, setRecords] = useState<CaseRecord[]>(demoCases);
   const [activeSection, setActiveSection] = useState<DashboardSection>("overview");
   const [caseFilter, setCaseFilter] = useState<CaseFilter>("all");
@@ -181,7 +198,7 @@ function Index() {
   const todayVisits = followUpRecords.filter((record) => record.followUpDate <= today);
   const activeCount = records.filter((record) => record.status !== "Reviewed").length;
   const writtenNotesCount = records.filter((record) => record.summary.trim() || record.narrative.trim()).length;
-  const visitDate = new Intl.DateTimeFormat("en", {
+  const visitDate = new Intl.DateTimeFormat(language === "bn" ? "bn-BD" : "en-US", {
     weekday: "long",
     month: "long",
     day: "numeric",
@@ -194,9 +211,9 @@ function Index() {
         <aside className="hidden w-[248px] shrink-0 flex-col border-r border-sidebar-border bg-sidebar/95 px-4 py-5 lg:flex">
           <Brand />
           <div className="mt-10 px-3 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-            Workspace
+            {t("Workspace")}
           </div>
-          <nav className="mt-3 flex flex-col gap-1" aria-label="Main navigation">
+          <nav className="mt-3 flex flex-col gap-1" aria-label={t("Main navigation")}>
             {navigation.map((item) => (
               <NavigationButton
                 key={item.id}
@@ -213,11 +230,11 @@ function Index() {
               <div className="flex items-center gap-2">
                 <span className="size-2 rounded-full bg-success" />
                 <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
-                  Local preview
+                  {t("Local preview")}
                 </p>
               </div>
               <p className="mt-2 text-xs leading-5 text-muted-foreground">
-                Sample records reset when this page reloads.
+                {t("Sample records reset when this page reloads.")}
               </p>
             </div>
             <div className="flex items-center gap-3 border-t border-sidebar-border px-2 pt-4">
@@ -226,7 +243,7 @@ function Index() {
               </div>
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium">Dr. Rahman</p>
-                <p className="truncate text-xs text-muted-foreground">Clinic workspace</p>
+                <p className="truncate text-xs text-muted-foreground">{t("Clinic workspace")}</p>
               </div>
             </div>
           </div>
@@ -237,27 +254,49 @@ function Index() {
             <div className="flex items-center gap-3 lg:hidden">
               <Brand compact />
               <Button type="button" className="ml-auto" onClick={startNewCase}>
-                <Plus aria-hidden="true" /> New case
+                <Plus aria-hidden="true" /> {t("New case")}
               </Button>
             </div>
             <div className="mt-3 flex items-center gap-3 lg:mt-0">
               <div className="relative w-full max-w-sm">
                 <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
                 <Input
-                  aria-label="Search patients and notes"
+                  aria-label={t("Search patients and notes")}
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Search patients, notes, or ID…"
+                  placeholder={t("Search patients, notes, or ID…")}
                   className="h-10 border-transparent bg-muted/70 pl-9 shadow-none focus-visible:border-input"
                 />
               </div>
               <div className="ml-auto flex shrink-0 items-center gap-2">
+                <div className="flex items-center rounded-md border border-border p-0.5" role="group" aria-label={t("Language")}>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant={language === "bn" ? "secondary" : "ghost"}
+                    aria-pressed={language === "bn"}
+                    onClick={() => setLanguage("bn")}
+                    className="h-8 px-2 text-xs"
+                  >
+                    বাংলা
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant={language === "en" ? "secondary" : "ghost"}
+                    aria-pressed={language === "en"}
+                    onClick={() => setLanguage("en")}
+                    className="h-8 px-2 text-xs"
+                  >
+                    English
+                  </Button>
+                </div>
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon"
-                  aria-label="Open follow-ups"
-                  title="Open follow-ups"
+                  aria-label={t("Open follow-ups")}
+                  title={t("Open follow-ups")}
                   onClick={() => setActiveSection("follow-ups")}
                   className="relative"
                 >
@@ -271,11 +310,11 @@ function Index() {
                   <span className="text-sm font-medium">Dr. Rahman</span>
                 </div>
                 <Button type="button" className="hidden sm:inline-flex" onClick={startNewCase}>
-                  <Plus aria-hidden="true" /> New case
+                  <Plus aria-hidden="true" /> {t("New case")}
                 </Button>
               </div>
             </div>
-            <nav className="mt-3 flex gap-1 overflow-x-auto pb-0.5 lg:hidden" aria-label="Main navigation">
+            <nav className="mt-3 flex gap-1 overflow-x-auto pb-0.5 lg:hidden" aria-label={t("Main navigation")}>
               {navigation.map((item) => (
                 <NavigationButton
                   key={item.id}
@@ -293,18 +332,18 @@ function Index() {
               <div className="flex flex-wrap items-end justify-between gap-5">
                 <div className="min-w-0">
                   <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-primary">
-                    {activeSection === "overview" ? visitDate : page.eyebrow}
+                    {activeSection === "overview" ? visitDate : t(page.eyebrow)}
                   </p>
                   <h1 className="mt-2 font-display text-2xl font-semibold leading-tight sm:text-3xl">
-                    {page.title}
+                    {t(page.title)}
                   </h1>
                   <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-                    {activeSection === "overview" ? "Your practice, at a glance." : page.description}
+                    {activeSection === "overview" ? t("Your practice, at a glance.") : t(page.description)}
                   </p>
                 </div>
                 {activeSection !== "overview" && (
                   <Badge variant="outline" className="gap-1.5 border-primary/20 bg-primary/5 text-primary">
-                    <span className="size-1.5 rounded-full bg-primary" /> Local demo
+                  <span className="size-1.5 rounded-full bg-primary" /> {t("Local demo")}
                   </Badge>
                 )}
               </div>
@@ -323,7 +362,7 @@ function Index() {
                     className="ml-auto h-7 text-success hover:bg-success/10 hover:text-success"
                     onClick={() => setSavedMessage("")}
                   >
-                    Dismiss
+                    {t("Dismiss")}
                   </Button>
                 </div>
               )}
@@ -363,8 +402,8 @@ function Index() {
               )}
 
               <footer className="mt-9 flex flex-wrap items-center justify-between gap-2 border-t border-border/70 pt-4 text-xs text-muted-foreground">
-                <span>Case Desk · Patient interviews and follow-up</span>
-                <span className="font-mono">LOCAL PREVIEW · NOT CONNECTED</span>
+                <span>{t("Case Desk · Patient interviews and follow-up")}</span>
+                <span className="font-mono">{t("LOCAL PREVIEW · NOT CONNECTED")}</span>
               </footer>
             </div>
           </main>
