@@ -16,7 +16,6 @@ import {
   Plus,
   Search,
   Stethoscope,
-  UserRound,
   UsersRound,
 } from "lucide-react";
 
@@ -191,7 +190,7 @@ function CaseDeskDashboard() {
         ? current.map((item) => item.patientId === record.patientId ? record : item)
         : [record, ...current],
     );
-    setSavedMessage(`${record.fullName} ${isExisting ? "updated" : "added"} in this preview.`);
+    setSavedMessage(`${record.fullName} ${isExisting ? t("updated in this preview.") : t("added in this preview.")}`);
     setActiveSection("cases");
   };
 
@@ -208,7 +207,7 @@ function CaseDeskDashboard() {
   return (
     <div className="dashboard-canvas min-h-screen text-foreground">
       <div className="mx-auto flex min-h-screen max-w-[1680px]">
-        <aside className="hidden w-[248px] shrink-0 flex-col border-r border-sidebar-border bg-sidebar/95 px-4 py-5 lg:flex">
+        <aside className="hidden w-62 shrink-0 flex-col border-r border-sidebar-border bg-sidebar/95 px-4 py-5 lg:flex">
           <Brand />
           <div className="mt-10 px-3 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
             {t("Workspace")}
@@ -229,7 +228,7 @@ function CaseDeskDashboard() {
             <div className="rounded-md border border-sidebar-border bg-sidebar-accent/70 p-3">
               <div className="flex items-center gap-2">
                 <span className="size-2 rounded-full bg-success" />
-                <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+                <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
                   {t("Local preview")}
                 </p>
               </div>
@@ -242,7 +241,7 @@ function CaseDeskDashboard() {
                 DR
               </div>
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium">Dr. Rahman</p>
+                <p className="truncate text-sm font-medium">{t("Dr. Rahman")}</p>
                 <p className="truncate text-xs text-muted-foreground">{t("Clinic workspace")}</p>
               </div>
             </div>
@@ -307,7 +306,7 @@ function CaseDeskDashboard() {
                   <div className="flex size-8 items-center justify-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground">
                     DR
                   </div>
-                  <span className="text-sm font-medium">Dr. Rahman</span>
+                  <span className="text-sm font-medium">{t("Dr. Rahman")}</span>
                 </div>
                 <Button type="button" className="hidden sm:inline-flex" onClick={startNewCase}>
                   <Plus aria-hidden="true" /> {t("New case")}
@@ -328,7 +327,7 @@ function CaseDeskDashboard() {
           </header>
 
           <main className="flex-1 px-4 py-6 sm:px-7 sm:py-8 lg:px-9 lg:py-9">
-            <div className="mx-auto max-w-[1440px]">
+            <div className="mx-auto max-w-360">
               <div className="flex flex-wrap items-end justify-between gap-5">
                 <div className="min-w-0">
                   <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-primary">
@@ -422,14 +421,15 @@ function CaseDeskDashboard() {
 }
 
 function Brand({ compact = false }: { compact?: boolean }) {
+  const { t } = useCaseDeskLanguage();
   return (
     <div className={`flex min-w-0 items-center gap-2.5 ${compact ? "" : "px-2"}`}>
       <div className="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground">
-        <Stethoscope className="size-[18px]" aria-hidden="true" />
+        <Stethoscope className="size-4.5" aria-hidden="true" />
       </div>
       <div className="min-w-0">
-        <p className="truncate font-display text-base font-bold leading-tight">Case Desk</p>
-        {!compact && <p className="mt-0.5 text-[11px] text-muted-foreground">Clinical workspace</p>}
+        <p className="truncate font-display text-base font-bold leading-tight">{t("Case Desk")}</p>
+        {!compact && <p className="mt-0.5 text-[11px] text-muted-foreground">{t("Clinical workspace")}</p>}
       </div>
     </div>
   );
@@ -448,6 +448,7 @@ function NavigationButton({
   count?: string | undefined;
   compact?: boolean;
 }) {
+  const { t } = useCaseDeskLanguage();
   const Icon = item.icon;
   return (
     <Button
@@ -458,7 +459,7 @@ function NavigationButton({
       className={`h-10 shrink-0 justify-start gap-3 px-3 text-sm ${active ? "font-semibold text-foreground" : "text-muted-foreground"} ${compact ? "h-9 gap-2 px-2.5 text-xs" : "w-full"}`}
     >
       <Icon className="size-4 shrink-0" aria-hidden="true" />
-      <span className="whitespace-nowrap">{item.label}</span>
+      <span className="whitespace-nowrap">{t(item.label)}</span>
       {count && !compact && (
         <span className="ml-auto font-mono text-[11px] text-muted-foreground">{count}</span>
       )}
@@ -485,37 +486,40 @@ function OverviewSection({
   onViewAll: () => void;
   onViewFollowUps: () => void;
 }) {
+  const { language, t } = useCaseDeskLanguage();
   return (
     <>
-      <section className="mt-7 grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label="Practice summary">
-        <MetricCard label="Cases on file" value={records.length} detail="Sample patient records" icon={UsersRound} tone="primary" />
-        <MetricCard label="Follow-ups due" value={dueRecords.length} detail="Today or overdue" icon={CalendarDays} tone="warning" />
-        <MetricCard label="In progress" value={activeCount} detail="Open case records" icon={Activity} tone="success" />
-        <MetricCard label="With written notes" value={writtenNotesCount} detail="Narrative or summary added" icon={FileText} tone="neutral" />
+      <section className="mt-7 grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label={t("Practice summary")}>
+        <MetricCard label={t("Cases on file")} value={records.length} detail={t("Sample patient records")} icon={UsersRound} tone="primary" />
+        <MetricCard label={t("Follow-ups due")} value={dueRecords.length} detail={t("Today or overdue")} icon={CalendarDays} tone="warning" />
+        <MetricCard label={t("In progress")} value={activeCount} detail={t("Open case records")} icon={Activity} tone="success" />
+        <MetricCard label={t("With written notes")} value={writtenNotesCount} detail={t("Narrative or summary added")} icon={FileText} tone="neutral" />
       </section>
 
       <div className="mt-6 grid gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(280px,0.8fr)]">
         <section className="min-w-0 overflow-hidden rounded-md border border-border bg-card/95" aria-labelledby="recent-cases-heading">
           <SectionHeader
-            eyebrow="CASE FILES"
-            title="Recent cases"
-            description="The latest patient interviews in this workspace."
-            actionLabel="All cases"
+            eyebrow={t("CASE FILES")}
+            title={t("Recent cases")}
+            headingId="recent-cases-heading"
+            description={t("The latest patient interviews in this workspace.")}
+            actionLabel={t("All cases")}
             onAction={onViewAll}
           />
           {records.length > 0 ? (
             <CaseTable records={records.slice(0, 5)} query={query} onOpenCase={onOpenCase} />
           ) : (
-            <EmptyState icon={Search} title="No cases found" description="Try another search, or start a new case." />
+            <EmptyState icon={Search} title={t("No cases found")} description={t("Try another search, or start a new case.")} />
           )}
         </section>
 
         <section className="min-w-0 overflow-hidden rounded-md border border-border bg-card/95" aria-labelledby="today-followups-heading">
           <SectionHeader
-            eyebrow="RETURN VISITS"
-            title="Follow-ups to review"
-            description="Scheduled today or awaiting a check-in."
-            actionLabel="View all"
+            eyebrow={t("RETURN VISITS")}
+            title={t("Follow-ups to review")}
+            headingId="today-followups-heading"
+            description={t("Scheduled today or awaiting a check-in.")}
+            actionLabel={t("View all")}
             onAction={onViewFollowUps}
           />
           {dueRecords.length > 0 ? (
@@ -532,22 +536,22 @@ function OverviewSection({
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium text-foreground">{record.fullName}</p>
-                    <p className="mt-1 truncate text-xs text-muted-foreground">{record.summary || "Follow-up visit"}</p>
+                    <p className="mt-1 truncate text-xs text-muted-foreground">{record.summary || t("Follow-up visit")}</p>
                   </div>
                   <div className="shrink-0 text-right">
-                    <p className="font-mono text-[11px] font-semibold text-primary">{formatDate(record.followUpDate)}</p>
-                    <p className="mt-1 text-[10px] text-muted-foreground">{record.followUpDate < localToday() ? "Past due" : "Upcoming"}</p>
+                    <p className="font-mono text-[11px] font-semibold text-primary">{formatDate(record.followUpDate, language)}</p>
+                    <p className="mt-1 text-[10px] text-muted-foreground">{record.followUpDate < localToday() ? t("Past due") : t("Upcoming")}</p>
                   </div>
                 </button>
               ))}
             </div>
           ) : (
-            <EmptyState icon={CalendarDays} title="Nothing due right now" description="New return visits will show here." />
+            <EmptyState icon={CalendarDays} title={t("Nothing due right now")} description={t("New return visits will show here.")} />
           )}
           <div className="border-t border-border bg-muted/50 px-5 py-4">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <Clock3 className="size-3.5 shrink-0" aria-hidden="true" />
-              <span>{dueRecords.length} visit{dueRecords.length === 1 ? "" : "s"} to review · sample data</span>
+              <span>{dueRecords.length} {dueRecords.length === 1 ? t("visit to review") : t("visits to review")} · {t("sample data")}</span>
             </div>
           </div>
         </section>
@@ -594,12 +598,14 @@ function MetricCard({
 function SectionHeader({
   eyebrow,
   title,
+  headingId,
   description,
   actionLabel,
   onAction,
 }: {
   eyebrow: string;
   title: string;
+  headingId?: string;
   description: string;
   actionLabel?: string;
   onAction?: () => void;
@@ -607,8 +613,8 @@ function SectionHeader({
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-5 py-4">
       <div className="min-w-0">
-        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-primary">{eyebrow}</p>
-        <h2 className="mt-1 text-base font-semibold" id={title.toLowerCase().replaceAll(" ", "-") + "-heading"}>{title}</h2>
+        <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-primary">{eyebrow}</p>
+        <h2 className="mt-1 text-base font-semibold" id={headingId}>{title}</h2>
         <p className="mt-1 text-xs text-muted-foreground">{description}</p>
       </div>
       {actionLabel && onAction && (
@@ -629,25 +635,26 @@ function CaseTable({
   query: string;
   onOpenCase: (record: CaseRecord) => void;
 }) {
+  const { language, t } = useCaseDeskLanguage();
   if (records.length === 0) {
     return (
       <EmptyState
         icon={query ? Search : ClipboardList}
-        title={query ? "No cases match that search" : "No patient cases yet"}
-        description={query ? "Try searching by name, case ID, or note." : "Start a new case to begin a patient record."}
+        title={query ? t("No cases match that search") : t("No patient cases yet")}
+        description={query ? t("Try searching by name, case ID, or note.") : t("Start a new case to begin a patient record.")}
       />
     );
   }
   return (
     <div className="overflow-x-auto">
-      <Table className="min-w-[640px]">
+      <Table className="min-w-160">
         <TableHeader>
           <TableRow className="hover:bg-transparent">
-            <TableHead className="pl-5">Patient</TableHead>
-            <TableHead>Key symptom</TableHead>
-            <TableHead>Last visit</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="pr-5"><span className="sr-only">Open case</span></TableHead>
+            <TableHead className="pl-5">{t("Patient")}</TableHead>
+            <TableHead>{t("Key symptom")}</TableHead>
+            <TableHead>{t("Last visit")}</TableHead>
+            <TableHead>{t("Status")}</TableHead>
+            <TableHead className="pr-5"><span className="sr-only">{t("Open case")}</span></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -669,10 +676,10 @@ function CaseTable({
                 </button>
               </TableCell>
               <TableCell className="max-w-48 truncate text-xs text-muted-foreground">
-                {record.symptoms[0]?.characteristic || record.summary || "Not recorded"}
+                {record.symptoms[0]?.characteristic || record.summary || t("Not recorded")}
               </TableCell>
               <TableCell className="whitespace-nowrap text-xs text-muted-foreground">
-                {formatDate(record.intakeDate)}
+                {formatDate(record.intakeDate, language)}
               </TableCell>
               <TableCell>
                 <StatusBadge status={record.status} />
@@ -682,8 +689,8 @@ function CaseTable({
                   type="button"
                   variant="ghost"
                   size="icon"
-                  aria-label={`Open ${record.fullName}`}
-                  title={`Open ${record.fullName}`}
+                  aria-label={`${t("Open case")} · ${record.fullName}`}
+                  title={`${t("Open case")} · ${record.fullName}`}
                   onClick={() => onOpenCase(record)}
                 >
                   <ArrowUpRight aria-hidden="true" />
@@ -698,9 +705,10 @@ function CaseTable({
 }
 
 function StatusBadge({ status }: { status: CaseRecord["status"] }) {
+  const { t } = useCaseDeskLanguage();
   return (
     <Badge variant="outline" className={`whitespace-nowrap text-[10px] font-medium ${getStatusClass(status)}`}>
-      {status}
+      {t(status)}
     </Badge>
   );
 }
@@ -720,16 +728,17 @@ function CasesSection({
   onOpenCase: (record: CaseRecord) => void;
   onNewCase: () => void;
 }) {
+  const { t } = useCaseDeskLanguage();
   const filters: { id: CaseFilter; label: string }[] = [
-    { id: "all", label: `All cases · ${totalCount}` },
-    { id: "open", label: "In progress" },
-    { id: "due", label: "Follow-up due" },
-    { id: "reviewed", label: "Reviewed" },
+    { id: "all", label: `${t("All cases")} · ${totalCount}` },
+    { id: "open", label: t("In progress") },
+    { id: "due", label: t("Follow-up due") },
+    { id: "reviewed", label: t("Reviewed") },
   ];
   return (
     <section className="mt-6 overflow-hidden rounded-md border border-border bg-card/95">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-4 sm:px-5">
-        <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter cases">
+        <div className="flex flex-wrap gap-1.5" role="group" aria-label={t("Filter cases")}>
           {filters.map((option) => (
             <Button
               key={option.id}
@@ -745,7 +754,7 @@ function CasesSection({
           ))}
         </div>
         <Button type="button" onClick={onNewCase}>
-          <Plus aria-hidden="true" /> Start a case
+          <Plus aria-hidden="true" /> {t("Start a case")}
         </Button>
       </div>
       <CaseTable records={records} onOpenCase={onOpenCase} query="" />
@@ -764,14 +773,15 @@ function FollowUpsSection({
   onOpenCase: (record: CaseRecord) => void;
   onNewCase: () => void;
 }) {
+  const { language, t } = useCaseDeskLanguage();
   const sortedRecords = [...records].sort((a, b) => a.followUpDate.localeCompare(b.followUpDate));
   return (
     <section className="mt-6 overflow-hidden rounded-md border border-border bg-card/95">
       <SectionHeader
-        eyebrow="RETURN VISITS"
-        title="Next conversations"
-        description="The sample schedule is sorted by date."
-        actionLabel="New case"
+        eyebrow={t("RETURN VISITS")}
+        title={t("Next conversations")}
+        description={t("The sample schedule is sorted by date.")}
+        actionLabel={t("New case")}
         onAction={onNewCase}
       />
       {sortedRecords.length > 0 ? (
@@ -786,20 +796,20 @@ function FollowUpsSection({
                 className="flex w-full flex-wrap items-center gap-4 px-5 py-4 text-left transition-colors hover:bg-muted/50"
               >
                 <span className={`flex size-12 shrink-0 flex-col items-center justify-center rounded-md ${overdue ? "bg-warning/10 text-warning" : "bg-accent text-primary"}`}>
-                  <span className="font-mono text-[9px] font-semibold uppercase">{formatDate(record.followUpDate, { month: "short" })}</span>
+                  <span className="font-mono text-[9px] font-semibold uppercase">{formatDate(record.followUpDate, language, { month: "short" })}</span>
                   <span className="font-display text-lg font-semibold leading-none">{new Date(`${record.followUpDate}T12:00:00`).getDate()}</span>
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="flex flex-wrap items-center gap-2">
                     <span className="font-medium text-foreground">{record.fullName}</span>
-                    {overdue && <Badge variant="outline" className="border-warning/20 bg-warning/10 text-[10px] text-warning">Past due</Badge>}
+                    {overdue && <Badge variant="outline" className="border-warning/20 bg-warning/10 text-[10px] text-warning">{t("Past due")}</Badge>}
                   </span>
                   <span className="mt-1 block truncate text-xs text-muted-foreground">
-                    {record.summary || record.followUpNote || "Follow-up visit"}
+                    {record.summary || record.followUpNote || t("Follow-up visit")}
                   </span>
                 </span>
                 <span className="ml-auto flex items-center gap-2 text-xs text-muted-foreground">
-                  <Clock3 className="size-3.5" aria-hidden="true" /> {overdue ? "Review" : "Scheduled"}
+                  <Clock3 className="size-3.5" aria-hidden="true" /> {overdue ? t("Review") : t("Scheduled")}
                   <ChevronRight className="size-4" aria-hidden="true" />
                 </span>
               </button>
@@ -807,7 +817,7 @@ function FollowUpsSection({
           })}
         </div>
       ) : (
-        <EmptyState icon={CalendarDays} title="No follow-ups found" description="Try clearing your search or add a return date to a case." />
+        <EmptyState icon={CalendarDays} title={t("No follow-ups found")} description={t("Try clearing your search or add a return date to a case.")} />
       )}
     </section>
   );
@@ -820,12 +830,13 @@ function NotesSection({
   records: CaseRecord[];
   onOpenCase: (record: CaseRecord) => void;
 }) {
+  const { language, t } = useCaseDeskLanguage();
   return (
     <section className="mt-6 overflow-hidden rounded-md border border-border bg-card/95">
       <SectionHeader
-        eyebrow="RECENT ENTRIES"
-        title="Notes from the casebook"
-        description="Narratives and symptom summaries from recent interviews."
+        eyebrow={t("RECENT ENTRIES")}
+        title={t("Notes from the casebook")}
+        description={t("Narratives and symptom summaries from recent interviews.")}
       />
       {records.length > 0 ? (
         <div className="divide-y divide-border">
@@ -839,28 +850,28 @@ function NotesSection({
                   <h2 className="font-medium">{record.fullName}</h2>
                   <span className="font-mono text-[10px] text-muted-foreground">{record.patientId}</span>
                   <span className="text-xs text-muted-foreground">·</span>
-                  <span className="text-xs text-muted-foreground">{formatDate(record.intakeDate)}</span>
+                  <span className="text-xs text-muted-foreground">{formatDate(record.intakeDate, language)}</span>
                 </div>
-                <p className="mt-2 text-sm leading-6 text-foreground/90">{record.summary || record.narrative || "No narrative recorded."}</p>
+                <p className="mt-2 text-sm leading-6 text-foreground/90">{record.summary || record.narrative || t("No narrative recorded.")}</p>
                 {record.symptoms.length > 0 && (
                   <div className="mt-3 flex flex-wrap gap-2">
                     {record.symptoms.slice(0, 3).map((symptom) => (
                       <Badge key={symptom.id} variant="secondary" className="gap-1.5 text-[10px]">
                         <span className="font-mono text-primary">{symptom.code}</span>
-                        {symptom.characteristic || symptom.sensation || "Symptom"}
+                        {symptom.characteristic || symptom.sensation || t("Symptom")}
                       </Badge>
                     ))}
                   </div>
                 )}
               </div>
               <Button type="button" variant="outline" size="sm" className="ml-auto shrink-0" onClick={() => onOpenCase(record)}>
-                Open case <ChevronRight aria-hidden="true" />
+                {t("Open case")} <ChevronRight aria-hidden="true" />
               </Button>
             </article>
           ))}
         </div>
       ) : (
-        <EmptyState icon={NotebookPen} title="No notes match your search" description="Search by patient, case ID, or a phrase from a note." />
+        <EmptyState icon={NotebookPen} title={t("No notes match your search")} description={t("Search by patient, case ID, or a phrase from a note.")} />
       )}
     </section>
   );

@@ -192,6 +192,8 @@ const bengaliCopy: Record<string, string> = {
   "Symptom code": "লক্ষণ কোড",
   "Cause and accompanying signs": "কারণ ও সহগামী লক্ষণ",
   "Practice summary": "চেম্বারের সারাংশ",
+  "Case Desk": "কেস ডেস্ক",
+  "Dr. Rahman": "ডা. রহমান",
 };
 
 export function translateCaseDeskCopy(language: CaseDeskLanguage, copy: string): string {

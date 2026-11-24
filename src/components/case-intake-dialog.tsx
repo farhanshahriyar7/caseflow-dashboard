@@ -584,7 +584,7 @@ export function CaseIntakeDialog({
                     {selectedSymptoms.map((symptom) => (
                       <Badge key={symptom.id} variant="secondary" className="gap-1.5 font-medium">
                         <span className="font-mono text-primary">{symptom.code}</span>
-                        {symptom.characteristic || symptom.sensation || symptom.location || "Symptom"}
+                        {symptom.characteristic || symptom.sensation || symptom.location || t("Symptom")}
                       </Badge>
                     ))}
                   </div>
