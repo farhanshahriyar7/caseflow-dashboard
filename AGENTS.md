@@ -30,3 +30,5 @@ use the editor.
 <!-- LOVABLE:END -->
 
 Case-taking structure: keep case types, demo records, and required-profile validation in `src/lib/case-taking.ts`, with the multi-step intake in a focused component, so the dashboard stays backend-free until persistence is requested.
+
+Keep shared case and practitioner state in a provider mounted by the pathless workspace layout so navigation between dashboard pages preserves the in-memory preview data.
