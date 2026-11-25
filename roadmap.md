@@ -1,5 +1,7 @@
 # Case Desk remaining work
 
-- [ ] Make Bangla the default for the dashboard and case-intake form, with an English switch.
-- [ ] Verify both languages, run focused tests, inspect build diagnostics, and commit.
+- [ ] Finish and verify the Bangla-default dashboard and case-intake form, with an English switch.
+- [ ] Add a profile dropdown with Profile and Settings pages.
+- [ ] Make Overview, Patient cases, Follow-ups, and Clinical notes separate navigable pages.
+- [ ] Verify language switching, menus, page navigation, tests, build diagnostics, and commit.
 - Deferred by request: printable case summary, archive, and delete actions.

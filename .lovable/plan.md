@@ -1,13 +1,14 @@
-# Finish Case Desk dashboard
+# Case Desk pages and profile menu
 
 ## What to build
-- Make Bangla the default throughout the dashboard and case-intake form, with a clear English language switch.
-- Add a case summary and prescription dialog that can be printed cleanly.
-- Add archive and delete actions for patient cases, with confirmation before deleting and a way to view archived cases.
-- Keep sample and newly entered records in page memory only; do not connect a database.
+- Finish and verify the Bangla-first dashboard and intake form, keeping English as the alternate language.
+- Add a profile dropdown in the dashboard header with Profile and Settings destinations.
+- Give Overview, Patient cases, Follow-ups, Clinical notes, Profile, and Settings their own navigable pages.
+- Keep the current sample records in page memory; do not add a database or persistence.
+- Leave printable summaries, archive, and delete actions deferred.
 
 ## Technical details
-- Preserve the existing warm ruled-paper, charcoal, and coral visual direction and current single-page workflow.
-- Translate visible dashboard and intake labels while leaving clinical record values and internal statuses unchanged.
-- Use the existing UI controls, semantic design tokens, and the browser print dialog; keep archived cases separate from active counts and follow-ups.
-- Verify Bangla default, English switching, printing view, archive/restore, and delete confirmation in the preview; run focused tests and inspect build diagnostics before committing.
+- Preserve the existing ruled-paper, charcoal, and coral visual direction.
+- Use the existing TanStack Start routing and shared dashboard state so navigating between pages does not discard in-memory cases.
+- Use existing UI controls and semantic design tokens; give each page unique metadata.
+- Verify the preview, language switch, profile menu, page navigation, tests, and build diagnostics before committing.
