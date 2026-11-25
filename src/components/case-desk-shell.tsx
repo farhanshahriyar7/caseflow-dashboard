@@ -1,4 +1,5 @@
-import { Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { type ReactNode } from "react";
+import { Link, useRouterState } from "@tanstack/react-router";
 import {
   Bell,
   CalendarClock,
@@ -38,7 +39,7 @@ function initials(value: string) {
   return value.split(" ").filter(Boolean).slice(0, 2).map((part) => part.charAt(0)).join("").toUpperCase();
 }
 
-export function CaseDeskShell() {
+export function CaseDeskShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (router) => router.location.pathname });
   const { language, setLanguage, t } = useCaseDeskLanguage();
   const {
@@ -177,7 +178,7 @@ export function CaseDeskShell() {
                   </Button>
                 </div>
               )}
-              <Outlet />
+              {children}
               <footer className="mt-9 flex flex-wrap items-center justify-between gap-2 border-t border-border/70 pt-4 text-xs text-muted-foreground">
                 <span>{t("Case Desk · Patient interviews and follow-up")}</span>
                 <span className="font-mono">{t("LOCAL PREVIEW · NOT CONNECTED")}</span>

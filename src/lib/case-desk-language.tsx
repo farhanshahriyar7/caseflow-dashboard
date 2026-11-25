@@ -194,7 +194,6 @@ const bengaliCopy: Record<string, string> = {
   "Practice summary": "চেম্বারের সারাংশ",
   "Case Desk": "কেস ডেস্ক",
   "Dr. Rahman": "ডা. রহমান",
-  "Profile": "প্রোফাইল",
   "Settings": "সেটিংস",
   "Practitioner profile": "চিকিৎসকের প্রোফাইল",
   "Profile details": "প্রোফাইলের তথ্য",

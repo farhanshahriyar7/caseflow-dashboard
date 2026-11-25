@@ -10,32 +10,93 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WorkspaceRouteImport } from './routes/_workspace'
+import { Route as WorkspaceIndexRouteImport } from './routes/_workspace/index'
+import { Route as WorkspaceCasesRouteImport } from './routes/_workspace/cases'
+import { Route as WorkspaceFollowUpsRouteImport } from './routes/_workspace/follow-ups'
+import { Route as WorkspaceNotesRouteImport } from './routes/_workspace/notes'
+import { Route as WorkspaceProfileRouteImport } from './routes/_workspace/profile'
+import { Route as WorkspaceSettingsRouteImport } from './routes/_workspace/settings'
 
 const WorkspaceRoute = WorkspaceRouteImport.update({
   id: '/_workspace',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WorkspaceIndexRoute = WorkspaceIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
+const WorkspaceCasesRoute = WorkspaceCasesRouteImport.update({
+  id: '/cases',
+  path: '/cases',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
+const WorkspaceFollowUpsRoute = WorkspaceFollowUpsRouteImport.update({
+  id: '/follow-ups',
+  path: '/follow-ups',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
+const WorkspaceNotesRoute = WorkspaceNotesRouteImport.update({
+  id: '/notes',
+  path: '/notes',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
+const WorkspaceProfileRoute = WorkspaceProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
+const WorkspaceSettingsRoute = WorkspaceSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof WorkspaceRoute
+  '/': typeof WorkspaceIndexRoute
+  '/cases': typeof WorkspaceCasesRoute
+  '/follow-ups': typeof WorkspaceFollowUpsRoute
+  '/notes': typeof WorkspaceNotesRoute
+  '/profile': typeof WorkspaceProfileRoute
+  '/settings': typeof WorkspaceSettingsRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof WorkspaceRoute
+  '/cases': typeof WorkspaceCasesRoute
+  '/follow-ups': typeof WorkspaceFollowUpsRoute
+  '/notes': typeof WorkspaceNotesRoute
+  '/profile': typeof WorkspaceProfileRoute
+  '/settings': typeof WorkspaceSettingsRoute
+  '/': typeof WorkspaceIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_workspace': typeof WorkspaceRoute
+  '/_workspace': typeof WorkspaceRouteWithChildren
+  '/_workspace/cases': typeof WorkspaceCasesRoute
+  '/_workspace/follow-ups': typeof WorkspaceFollowUpsRoute
+  '/_workspace/notes': typeof WorkspaceNotesRoute
+  '/_workspace/profile': typeof WorkspaceProfileRoute
+  '/_workspace/settings': typeof WorkspaceSettingsRoute
+  '/_workspace/': typeof WorkspaceIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    '/' | '/cases' | '/follow-ups' | '/notes' | '/profile' | '/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/_workspace'
+  to: '/cases' | '/follow-ups' | '/notes' | '/profile' | '/settings' | '/'
+  id:
+    | '__root__'
+    | '/_workspace'
+    | '/_workspace/cases'
+    | '/_workspace/follow-ups'
+    | '/_workspace/notes'
+    | '/_workspace/profile'
+    | '/_workspace/settings'
+    | '/_workspace/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  WorkspaceRoute: typeof WorkspaceRoute
+  WorkspaceRoute: typeof WorkspaceRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -47,11 +108,75 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkspaceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_workspace/': {
+      id: '/_workspace/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof WorkspaceIndexRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
+    '/_workspace/cases': {
+      id: '/_workspace/cases'
+      path: '/cases'
+      fullPath: '/cases'
+      preLoaderRoute: typeof WorkspaceCasesRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
+    '/_workspace/follow-ups': {
+      id: '/_workspace/follow-ups'
+      path: '/follow-ups'
+      fullPath: '/follow-ups'
+      preLoaderRoute: typeof WorkspaceFollowUpsRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
+    '/_workspace/notes': {
+      id: '/_workspace/notes'
+      path: '/notes'
+      fullPath: '/notes'
+      preLoaderRoute: typeof WorkspaceNotesRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
+    '/_workspace/profile': {
+      id: '/_workspace/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof WorkspaceProfileRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
+    '/_workspace/settings': {
+      id: '/_workspace/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof WorkspaceSettingsRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
   }
 }
 
+interface WorkspaceRouteChildren {
+  WorkspaceCasesRoute: typeof WorkspaceCasesRoute
+  WorkspaceFollowUpsRoute: typeof WorkspaceFollowUpsRoute
+  WorkspaceNotesRoute: typeof WorkspaceNotesRoute
+  WorkspaceProfileRoute: typeof WorkspaceProfileRoute
+  WorkspaceSettingsRoute: typeof WorkspaceSettingsRoute
+  WorkspaceIndexRoute: typeof WorkspaceIndexRoute
+}
+
+const WorkspaceRouteChildren: WorkspaceRouteChildren = {
+  WorkspaceCasesRoute: WorkspaceCasesRoute,
+  WorkspaceFollowUpsRoute: WorkspaceFollowUpsRoute,
+  WorkspaceNotesRoute: WorkspaceNotesRoute,
+  WorkspaceProfileRoute: WorkspaceProfileRoute,
+  WorkspaceSettingsRoute: WorkspaceSettingsRoute,
+  WorkspaceIndexRoute: WorkspaceIndexRoute,
+}
+
+const WorkspaceRouteWithChildren = WorkspaceRoute._addFileChildren(
+  WorkspaceRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  WorkspaceRoute: WorkspaceRoute,
+  WorkspaceRoute: WorkspaceRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

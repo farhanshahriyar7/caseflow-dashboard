@@ -436,7 +436,7 @@ export function CaseIntakeDialog({
                 <span className="text-xs text-muted-foreground">{t("Choose a code for each symptom entry.")}</span>
               </div>
               <div className="overflow-x-auto rounded-md border border-border bg-background">
-                <Table className="min-w-[1120px]">
+                <Table className="min-w-280">
                   <TableHeader>
                     <TableRow className="hover:bg-transparent">
                       <TableHead className="w-24">{t("Code")}</TableHead>
