@@ -8,6 +8,7 @@ import {
   Clock3,
   FileText,
   NotebookPen,
+  Plus,
   Search,
   UsersRound,
 } from "lucide-react";
@@ -48,8 +49,19 @@ function getStatusClass(status: CaseRecord["status"]) {
   return "border-primary/20 bg-primary/10 text-primary";
 }
 
-function PageHeading({ eyebrow, title, description }: { eyebrow: string; title: string; description: string }) {
+function PageHeading({
+  eyebrow,
+  title,
+  description,
+  showNewCase = false,
+}: {
+  eyebrow: string;
+  title: string;
+  description: string;
+  showNewCase?: boolean;
+}) {
   const { t } = useCaseDeskLanguage();
+  const { startNewCase } = useCaseDeskWorkspace();
   return (
     <div className="flex flex-wrap items-end justify-between gap-5">
       <div className="min-w-0">
@@ -57,9 +69,11 @@ function PageHeading({ eyebrow, title, description }: { eyebrow: string; title: 
         <h1 className="mt-2 font-display text-2xl font-semibold leading-tight sm:text-3xl">{t(title)}</h1>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">{t(description)}</p>
       </div>
-      <Badge variant="outline" className="gap-1.5 border-primary/20 bg-primary/5 text-primary">
-        <span className="size-1.5 rounded-full bg-primary" /> {t("Local demo")}
-      </Badge>
+      {showNewCase && (
+        <Button type="button" onClick={startNewCase}>
+          <Plus aria-hidden="true" /> {t("New case")}
+        </Button>
+      )}
     </div>
   );
 }
@@ -164,7 +178,7 @@ export function OverviewPage() {
 
   return (
     <>
-      <PageHeading eyebrow="YOUR PRACTICE · TODAY" title="Good morning, Dr. Rahman" description="Your practice, at a glance." />
+      <PageHeading eyebrow="YOUR PRACTICE · TODAY" title="Good morning, Dr. Md. Amirul Islam Pramanik" description="Your practice, at a glance." showNewCase />
       <p className="mt-6 font-mono text-xs text-muted-foreground">{dateLabel}</p>
       <section className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label={t("Practice summary")}>
         <MetricCard label={t("Cases on file")} value={records.length} detail={t("Sample patient records")} icon={UsersRound} tone="primary" />
@@ -224,7 +238,7 @@ export function CasesPage() {
   ];
   return (
     <>
-      <PageHeading eyebrow="PATIENT RECORDS" title="Patient cases" description="Every interview and follow-up, in one place." />
+      <PageHeading eyebrow="PATIENT RECORDS" title="Patient cases" description="Every interview and follow-up, in one place." showNewCase />
       <section className="mt-6 overflow-hidden rounded-md border border-border bg-card/95">
         <div className="flex flex-col gap-4 border-b border-border px-4 py-4 sm:px-5">
           <div className="flex flex-wrap gap-1.5" role="group" aria-label={t("Filter cases")}>
@@ -245,7 +259,7 @@ export function FollowUpsPage() {
   const followUps = records.filter((record) => record.followUpDate && record.status !== "Reviewed").sort((a, b) => a.followUpDate.localeCompare(b.followUpDate));
   return (
     <>
-      <PageHeading eyebrow="VISIT PLANNER" title="Follow-ups" description="Keep upcoming conversations close at hand." />
+      <PageHeading eyebrow="VISIT PLANNER" title="Follow-ups" description="Keep upcoming conversations close at hand." showNewCase />
       <section className="mt-6 overflow-hidden rounded-md border border-border bg-card/95">
         <div className="border-b border-border px-5 py-4"><p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-primary">{t("RETURN VISITS")}</p><h2 className="mt-1 text-base font-semibold">{t("Next conversations")}</h2><p className="mt-1 text-xs text-muted-foreground">{t("The sample schedule is sorted by date.")}</p></div>
         {followUps.length > 0 ? <div className="divide-y divide-border">{followUps.map((record) => <FollowUpScheduleRow key={record.patientId} record={record} today={today} language={language} />)}</div> : <EmptyState icon={CalendarDays} title={t("No follow-ups found")} description={t("Try clearing your search or add a return date to a case.")} />}
@@ -275,7 +289,7 @@ export function NotesPage() {
   const notes = records.filter((record) => Boolean(record.narrative || record.summary)).filter((record) => !normalizedQuery || [record.fullName, record.patientId, record.summary, record.narrative].join(" ").toLowerCase().includes(normalizedQuery));
   return (
     <>
-      <PageHeading eyebrow="CASE JOURNAL" title="Clinical notes" description="Recent narratives and distinguishing symptoms from your cases." />
+      <PageHeading eyebrow="CASE JOURNAL" title="Clinical notes" description="Recent narratives and distinguishing symptoms from your cases." showNewCase />
       <section className="mt-6 overflow-hidden rounded-md border border-border bg-card/95">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-5 py-4"><div><p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-primary">{t("RECENT ENTRIES")}</p><h2 className="mt-1 text-base font-semibold">{t("Notes from the casebook")}</h2><p className="mt-1 text-xs text-muted-foreground">{t("Narratives and symptom summaries from recent interviews.")}</p></div><div className="relative w-full max-w-xs"><Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" /><Input aria-label={t("Search patients and notes")} value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t("Search patients, notes, or ID…")} className="h-9 border-transparent bg-muted/70 pl-9 shadow-none" /></div></div>
         {notes.length > 0 ? <div className="divide-y divide-border">{notes.map((record) => <NoteRow key={record.patientId} record={record} language={language} />)}</div> : <EmptyState icon={NotebookPen} title={t("No notes match your search")} description={t("Search by patient, case ID, or a phrase from a note.")} />}

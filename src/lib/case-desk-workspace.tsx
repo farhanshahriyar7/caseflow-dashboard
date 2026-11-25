@@ -39,8 +39,8 @@ export function CaseDeskWorkspaceProvider({ children }: { children: ReactNode })
   const [editingCase, setEditingCase] = useState<CaseRecord | null>(null);
   const [savedNotice, setSavedNotice] = useState<SavedNotice | null>(null);
   const [profile, setProfile] = useState<PractitionerProfile>({
-    displayName: "Dr. Rahman",
-    practiceName: "Clinic workspace",
+    displayName: "Dr. Md. Amirul Islam Pramanik",
+    practiceName: "Popular Homeo Hall",
     phone: "",
   });
 

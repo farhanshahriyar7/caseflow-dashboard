@@ -8,8 +8,8 @@ const bengaliCopy: Record<string, string> = {
   "Workspace": "কর্মক্ষেত্র",
   "Local preview": "স্থানীয় প্রিভিউ",
   "Sample records reset when this page reloads.": "পৃষ্ঠাটি পুনরায় লোড হলে নমুনা রেকর্ড মুছে যাবে।",
-  "Clinic workspace": "ক্লিনিকের কর্মক্ষেত্র",
-  "Clinical workspace": "ক্লিনিক্যাল কর্মক্ষেত্র",
+  "Popular Homeo Hall": "পপুলার হোমিও হল",
+  "Clinical workspace": "পপুলার হোমিও হল",
   "Main navigation": "প্রধান নেভিগেশন",
   "Language": "ভাষা",
   "Overview": "সারসংক্ষেপ",
@@ -17,7 +17,7 @@ const bengaliCopy: Record<string, string> = {
   "Follow-ups": "ফলো-আপ",
   "Clinical notes": "ক্লিনিক্যাল নোট",
   "YOUR PRACTICE · TODAY": "আপনার চেম্বার · আজ",
-  "Good morning, Dr. Rahman": "সুপ্রভাত, ডা. রহমান",
+  "Good morning, Dr. Md. Amirul Islam Pramanik": "সুপ্রভাত, মো: আমিরুল ইসলাম প্রামানিক ",
   "A clear view of your patient cases and the visits coming up.": "রোগীর কেস ও আসন্ন সাক্ষাতের সংক্ষিপ্ত চিত্র।",
   "PATIENT RECORDS": "রোগীর রেকর্ড",
   "Every interview and follow-up, in one place.": "সব সাক্ষাৎকার ও ফলো-আপ এক জায়গায়।",
@@ -193,7 +193,7 @@ const bengaliCopy: Record<string, string> = {
   "Cause and accompanying signs": "কারণ ও সহগামী লক্ষণ",
   "Practice summary": "চেম্বারের সারাংশ",
   "Case Desk": "কেস ডেস্ক",
-  "Dr. Rahman": "ডা. রহমান",
+  "Dr. Md. Amirul Islam Pramanik": "মো: আমিরুল ইসলাম প্রামানিক ",
   "Settings": "সেটিংস",
   "Practitioner profile": "চিকিৎসকের প্রোফাইল",
   "Profile details": "প্রোফাইলের তথ্য",
@@ -211,6 +211,8 @@ const bengaliCopy: Record<string, string> = {
   "English": "English",
   "Practice details": "চেম্বারের তথ্য",
   "Profile changes are kept in this preview only.": "প্রোফাইলের পরিবর্তন শুধু এই প্রিভিউতেই থাকবে।",
+  "Collapse sidebar": "সাইডবার সংকুচিত করুন",
+  "Expand sidebar": "সাইডবার প্রসারিত করুন",
 };
 
 export function translateCaseDeskCopy(language: CaseDeskLanguage, copy: string): string {
