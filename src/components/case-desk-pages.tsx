@@ -3,13 +3,19 @@ import { Link } from "@tanstack/react-router";
 import {
   Activity,
   ArrowUpRight,
+  Building2,
   CalendarDays,
+  Check,
   ChevronRight,
   Clock3,
   FileText,
+  Languages,
   NotebookPen,
+  Phone,
   Plus,
+  Save,
   Search,
+  UserRound,
   UsersRound,
 } from "lucide-react";
 
@@ -327,40 +333,168 @@ export function ProfilePage() {
   return (
     <>
       <PageHeading eyebrow="PROFILE DETAILS" title="Profile" description="Keep your practitioner details current in this workspace." />
-      <section className="mt-6 max-w-2xl border-y border-border bg-card/80 px-5 py-6 sm:px-7">
-        <div className="mb-6 flex items-center gap-3"><span className="flex size-11 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">{getInitials(profile.displayName)}</span><div><h2 className="font-semibold">{t("Practitioner profile")}</h2><p className="mt-1 text-xs text-muted-foreground">{t("Profile changes are kept in this preview only.")}</p></div></div>
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <ProfileField id="displayName" label={t("Display name")} value={draft.displayName} onChange={(value) => update("displayName", value)} />
-          <ProfileField id="practiceName" label={t("Practice name")} value={draft.practiceName} onChange={(value) => update("practiceName", value)} />
-          <ProfileField id="profilePhone" label={t("Contact phone")} value={draft.phone} onChange={(value) => update("phone", value)} type="tel" />
-          <div className="flex flex-wrap items-center gap-3 border-t border-border pt-4"><Button type="submit">{t("Save profile")}</Button>{saved && <p role="status" className="text-sm text-success">{t("Profile saved in this preview.")}</p>}</div>
-        </form>
-      </section>
+      <div className="mt-7 grid gap-8 xl:grid-cols-[minmax(0,1.65fr)_minmax(260px,0.75fr)]">
+        <section className="min-w-0 overflow-hidden border-y border-border bg-card/90">
+          <div className="flex items-center gap-4 border-b border-border px-5 py-5 sm:px-7">
+            <span className="flex size-11 shrink-0 items-center justify-center rounded-md bg-accent text-primary">
+              <UserRound className="size-5" aria-hidden="true" />
+            </span>
+            <div className="min-w-0">
+              <p className="font-mono text-[10px] font-semibold uppercase text-primary">{t("Practitioner profile")}</p>
+              <h2 className="mt-1 text-base font-semibold">{t("Profile details")}</h2>
+            </div>
+          </div>
+          <form onSubmit={handleSubmit} className="space-y-7 px-5 py-6 sm:px-7 sm:py-8">
+            <div className="grid gap-x-5 gap-y-6 sm:grid-cols-2">
+              <ProfileField
+                id="displayName"
+                label={t("Display name")}
+                value={draft.displayName}
+                onChange={(value) => update("displayName", value)}
+              />
+              <ProfileField
+                id="practiceName"
+                label={t("Practice name")}
+                value={draft.practiceName}
+                onChange={(value) => update("practiceName", value)}
+              />
+              <ProfileField
+                id="profilePhone"
+                label={t("Contact phone")}
+                value={draft.phone}
+                onChange={(value) => update("phone", value)}
+                type="tel"
+                className="sm:col-span-2"
+              />
+            </div>
+            <div className="flex flex-wrap items-center gap-3 border-t border-border pt-5">
+              <Button type="submit">
+                <Save aria-hidden="true" />
+                {t("Save profile")}
+              </Button>
+              {saved && <p role="status" className="text-sm text-success">{t("Profile saved in this preview.")}</p>}
+            </div>
+          </form>
+        </section>
+
+        <aside className="min-w-0 border-t border-border pt-6 xl:border-l xl:border-t-0 xl:pl-8 xl:pt-1">
+          <div className="flex items-start gap-4">
+            <span className="flex size-14 shrink-0 items-center justify-center rounded-md bg-primary text-sm font-semibold text-primary-foreground">
+              {getInitials(profile.displayName)}
+            </span>
+            <div className="min-w-0">
+              <p className="font-mono text-[10px] font-semibold uppercase text-primary">{t("Practice details")}</p>
+              <h2 className="mt-2 break-words font-display text-lg font-semibold leading-snug">{t(profile.displayName) || t("Practitioner profile")}</h2>
+              <p className="mt-1 break-words text-sm text-muted-foreground">{t(profile.practiceName) || t("Not recorded")}</p>
+            </div>
+          </div>
+          <dl className="mt-7 divide-y divide-border border-y border-border">
+            <div className="flex items-start gap-3 py-4">
+              <Building2 className="mt-0.5 size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+              <div className="min-w-0">
+                <dt className="text-xs text-muted-foreground">{t("Practice name")}</dt>
+                <dd className="mt-1 break-words text-sm font-medium">{t(profile.practiceName) || t("Not recorded")}</dd>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 py-4">
+              <Phone className="mt-0.5 size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+              <div className="min-w-0">
+                <dt className="text-xs text-muted-foreground">{t("Contact phone")}</dt>
+                <dd className="mt-1 break-words text-sm font-medium">{profile.phone || t("Not recorded")}</dd>
+              </div>
+            </div>
+          </dl>
+          <div className="mt-5 flex items-start gap-2.5">
+            <span className="mt-1 size-2 shrink-0 rounded-full bg-success" aria-hidden="true" />
+            <p className="text-xs leading-5 text-muted-foreground">{t("Profile changes are kept in this preview only.")}</p>
+          </div>
+        </aside>
+      </div>
     </>
   );
 }
 
-function ProfileField({ id, label, value, onChange, type = "text" }: { id: string; label: string; value: string; onChange: (value: string) => void; type?: string }) {
-  return <div className="space-y-2"><label htmlFor={id} className="text-sm font-medium">{label}</label><Input id={id} type={type} value={value} onChange={(event) => onChange(event.target.value)} /></div>;
+function ProfileField({
+  id,
+  label,
+  value,
+  onChange,
+  type = "text",
+  className,
+}: {
+  id: string;
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  type?: string;
+  className?: string;
+}) {
+  return (
+    <div className={`min-w-0 space-y-2 ${className ?? ""}`}>
+      <label htmlFor={id} className="text-sm font-medium">{label}</label>
+      <Input id={id} type={type} value={value} onChange={(event) => onChange(event.target.value)} className="h-11 bg-background/70" />
+    </div>
+  );
 }
 
 export function SettingsPage() {
   const { language, setLanguage, t } = useCaseDeskLanguage();
+  const languages = [
+    { value: "bn" as const, label: t("Bangla"), short: "BN" },
+    { value: "en" as const, label: t("English"), short: "EN" },
+  ];
   return (
     <>
       <PageHeading eyebrow="WORKSPACE SETTINGS" title="Settings" description="Manage how Case Desk looks and reads." />
-      <section className="mt-6 max-w-2xl border-y border-border bg-card/80 px-5 py-6 sm:px-7">
-        <div className="flex items-start gap-3"><span className="flex size-10 items-center justify-center rounded-md bg-accent text-primary"><SettingsIcon /></span><div><h2 className="font-semibold">{t("Interface language")}</h2><p className="mt-1 text-sm leading-6 text-muted-foreground">{t("Choose the language used across the dashboard and case form.")}</p></div></div>
-        <div className="mt-5 flex flex-wrap gap-2" role="group" aria-label={t("Language")}>
-          <Button type="button" variant={language === "bn" ? "secondary" : "outline"} aria-pressed={language === "bn"} onClick={() => setLanguage("bn")}>{t("Bangla")}</Button>
-          <Button type="button" variant={language === "en" ? "secondary" : "outline"} aria-pressed={language === "en"} onClick={() => setLanguage("en")}>{t("English")}</Button>
-        </div>
-      </section>
-      <p className="mt-4 text-xs text-muted-foreground">{t("Profile changes are kept in this preview only.")}</p>
+      <div className="mt-7 grid gap-8 xl:grid-cols-[minmax(0,1.45fr)_minmax(260px,0.75fr)]">
+        <section className="min-w-0 overflow-hidden border-y border-border bg-card/90">
+          <div className="flex items-start gap-4 border-b border-border px-5 py-5 sm:px-7">
+            <span className="flex size-11 shrink-0 items-center justify-center rounded-md bg-accent text-primary">
+              <Languages className="size-5" aria-hidden="true" />
+            </span>
+            <div className="min-w-0">
+              <p className="font-mono text-[10px] font-semibold uppercase text-primary">{t("Workspace settings")}</p>
+              <h2 className="mt-1 text-base font-semibold">{t("Interface language")}</h2>
+              <p className="mt-1 max-w-xl text-sm leading-6 text-muted-foreground">{t("Choose the language used across the dashboard and case form.")}</p>
+            </div>
+          </div>
+          <div className="grid gap-3 p-5 sm:grid-cols-2 sm:p-7" role="group" aria-label={t("Language")}>
+            {languages.map((item) => {
+              const selected = language === item.value;
+              return (
+                <Button
+                  key={item.value}
+                  type="button"
+                  variant={selected ? "secondary" : "outline"}
+                  aria-pressed={selected}
+                  onClick={() => setLanguage(item.value)}
+                  className="h-auto min-h-20 justify-between gap-4 px-4 py-4 text-left"
+                >
+                  <span className="flex min-w-0 items-center gap-3">
+                    <span className="flex size-10 shrink-0 items-center justify-center rounded-md border border-border bg-background font-mono text-xs font-semibold text-muted-foreground">{item.short}</span>
+                    <span className="min-w-0 whitespace-normal text-sm font-semibold">{item.label}</span>
+                  </span>
+                  <span className={`flex size-5 shrink-0 items-center justify-center rounded-full border ${selected ? "border-primary bg-primary text-primary-foreground" : "border-input text-transparent"}`}>
+                    <Check className="size-3" aria-hidden="true" />
+                  </span>
+                </Button>
+              );
+            })}
+          </div>
+        </section>
+        <aside className="min-w-0 border-t border-border pt-6 xl:border-l xl:border-t-0 xl:pl-8 xl:pt-1">
+          <div className="flex items-center gap-2">
+            <span className="size-2 rounded-full bg-primary" aria-hidden="true" />
+            <p className="font-mono text-[10px] font-semibold uppercase text-primary">{t("Local preview")}</p>
+          </div>
+          <p className="mt-5 font-display text-xl font-semibold">{t("Case Desk")}</p>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">{t("Case Desk · Patient interviews and follow-up")}</p>
+          <div className="mt-6 border-t border-border pt-5">
+            <p className="text-xs font-medium text-muted-foreground">{t("Interface language")}</p>
+            <p className="mt-1 font-display text-lg font-semibold">{language === "bn" ? "বাংলা" : "English"}</p>
+          </div>
+        </aside>
+      </div>
     </>
   );
-}
-
-function SettingsIcon() {
-  return <span className="font-mono text-sm font-semibold" aria-hidden="true">Aa</span>;
 }
